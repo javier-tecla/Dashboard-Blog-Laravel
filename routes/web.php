@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
 /** 
@@ -10,23 +10,18 @@ use Illuminate\Support\Facades\Route;
  * Route::put       |Actualizar
  */
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+/** 
+Route::get('/', [PageController::class, 'home'])->name('home');
 
-Route::get('blog', function () {
-    // consulta a base de datos 
-    $posts = [
-        ['id' => 1, 'title' => 'PHP',     'slug' => 'php'],
-        ['id' => 2, 'title' => 'Laravel', 'slug' => 'laravel'],
-    ];
+Route::get('blog', [PageController::class, 'blog'])->name('blog');
 
-    return view('blog', ['posts' => $posts]);
-})->name('blog');
+Route::get('blog/{slug}', [PageController::class, 'post'])->name('post');
+*/
 
-Route::get('blog/{slug}', function ($slug) {
-    // consulta a base de datos
-    $post = $slug;
+// Otra manera de escribirlo
+Route::controller(PageController::class)->group(function () {
 
-    return view('post', ['post' => $post]);
-})->name('post');
+    Route::get('/',            'home')->name('home');
+    Route::get('blog',         'blog')->name('blog');
+    Route::get('blog/{slug}',  'post')->name('post');
+});
